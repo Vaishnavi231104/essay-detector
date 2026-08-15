@@ -111,23 +111,23 @@ python evaluate.py
 
 ### 3.2 Failure Mode Analysis: 3 Confidently Incorrect Cases
 
-Statistical detectors have fundamental limits. The benchmark highlights three specific edge cases:
+Statistical detectors have fundamental limits. The benchmark highlights three specific edge cases[cite: 1]:
 
 #### Case 1: The Over-Edited Academic Essay (`human_academic_overedited_01`)
-* **Ground Truth:** Human-authored.
-* **Detector Classification:** Likely Machine Generated (76% AI Risk).
-* **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.11$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
+* **Ground Truth:** Human-authored[cite: 1].
+* **Detector Classification:** Misclassified as Machine Generated (68% AI Risk).
+* **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.113$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
 
 #### Case 2: The Adversarially Prompted Conversational LLM (`machine_conversational_01`)
-* **Ground Truth:** Machine-generated.
-* **Detector Classification:** Likely Human Written (21% AI Risk).
+* **Ground Truth:** Machine-generated[cite: 1].
+* **Detector Classification:** Misclassified as Human Written (10% AI Risk).
 * **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated the Burstiness $CV$ to $0.54$, bypassing length-variance heuristics.
 
 #### Case 3: The Non-Native English (ESL) Applicant (`human_esl_01`)
-* **Ground Truth:** Human-authored (ESL).
-* **Detector Classification:** Elevated AI Risk.
-* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.16$) and entropy.
-* **ESL Bias Mitigation in Veritas:** When low variance is detected in the absence of synthetic LLM vocabulary markers, Veritas activates an explicit **ESL Risk Indicator** to caution admissions reviewers against false positives.
+* **Ground Truth:** Human-authored (ESL)[cite: 1].
+* **Detector Classification:** Elevated AI Risk / False Positive (38% AI Risk)[cite: 1].
+* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.35$) and Shannon entropy ($5.508$), mimicking synthetic smoothing[cite: 1].
+* **Documented Review Guidance:** Because statistical stylometry cannot inherently distinguish non-native structural simplicity from machine-generated uniformity, admissions reviewers must cross-examine applicant language backgrounds before accepting statistical flags on ESL prose[cite: 1].
 
 ---
 
