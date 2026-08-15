@@ -1,0 +1,44 @@
+[
+  {
+    "id": "human_native_01",
+    "category": "Human (Native)",
+    "ground_truth": "human",
+    "subject": "Community Leadership",
+    "text": "The basement smelled of old cardboard and wet paint. We had forty-eight hours before the exhibition opened, and none of the lighting rigs were wired. I remember sitting on an overturned milk crate, looking at the tangled mess of copper cables, wondering if stepping up as stage manager was a mistake. But as the crew trickled in with coffee, we divided the circuit board into zones. By dawn, the lights worked."
+  },
+  {
+    "id": "human_esl_01",
+    "category": "Human (ESL)",
+    "ground_truth": "human",
+    "subject": "Immigration & Adaptation",
+    "text": "I came to a new school when I was twelve years old. I did not speak the language very well at first. My teachers were very helpful to me every day. I worked hard in my classes to improve my reading skills. Learning a new language taught me that dedication can overcome any obstacle."
+  },
+  {
+    "id": "machine_raw_01",
+    "category": "Machine (Raw)",
+    "ground_truth": "ai",
+    "subject": "Overcoming Adversity",
+    "text": "Navigating challenges serves as a powerful testament to personal resilience. Throughout my academic journey, facing unexpected obstacles has acted as a catalyst for profound growth. Furthermore, these transformative experiences have reinforced my unwavering commitment to excellence. In conclusion, every hardship plays a pivotal role in shaping character."
+  },
+  {
+    "id": "hybrid_polished_01",
+    "category": "Hybrid (Human Draft + AI Polish)",
+    "ground_truth": "mixed",
+    "subject": "Scientific Research",
+    "text": "I spent three months growing yeast cultures in our high school bio lab. Half the petri dishes got contaminated because the incubator seal was broken. This setback was a transformative crucible that reshaped my approach to empirical rigor. Furthermore, the systematic repetition of controls serves as a testament to the scientific method."
+  },
+  {
+    "id": "human_academic_overedited_01",
+    "category": "Human (Over-Edited)",
+    "ground_truth": "human",
+    "subject": "Urban Architecture",
+    "text": "The study of historical architecture serves as a lens into civil societal development. Furthermore, urban infrastructure reflects the economic priorities of each respective era. Moreover, monumental structures embody cultural values that endure across generations. In conclusion, preserving historical sites plays a pivotal role in maintaining communal heritage."
+  },
+  {
+    "id": "machine_conversational_01",
+    "category": "Machine (Slang/Adversarial)",
+    "ground_truth": "ai",
+    "subject": "Automotive Passion",
+    "text": "I never thought fixing an old carburetor would teach me patience. My hands were totally covered in grease. Screws rolling everywhere on the asphalt. It took me four straight days to figure out why the engine was choking on ignition. But when that motor finally roared back to life, it felt unreal."
+  }
+]
