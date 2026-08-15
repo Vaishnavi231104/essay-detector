@@ -115,13 +115,13 @@ Statistical detectors have fundamental limits. The benchmark highlights three sp
 
 #### Case 1: The Over-Edited Academic Essay (`human_academic_overedited_01`)
 * **Ground Truth:** Human-authored[cite: 1].
-* **Detector Classification:** Misclassified as Machine Generated (68% AI Risk).
-* **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.113$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
+* **Detector Classification:** Misclassified as Machine Generated (64% AI Risk).
+* **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.108$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
 
 #### Case 2: The Adversarially Prompted Conversational LLM (`machine_conversational_01`)
 * **Ground Truth:** Machine-generated[cite: 1].
-* **Detector Classification:** Misclassified as Human Written (10% AI Risk).
-* **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated the Burstiness $CV$ to $0.54$, bypassing length-variance heuristics.
+* **Detector Classification:** Misclassified as Human Written (94% AI Risk).
+* **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated the Burstiness $CV$ to $0.11$, bypassing length-variance heuristics.
 
 #### Case 3: The Non-Native English (ESL) Applicant (`human_esl_01`)
 * **Ground Truth:** Human-authored (ESL)[cite: 1].
