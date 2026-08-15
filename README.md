@@ -154,7 +154,6 @@ python evaluate.py
 * **Deterministic Signal Synthesis:** Instead of passing text to an external black-box LLM API and relaying a prompt verdict, the system computes closed-form statistical properties (length variance, token frequencies, Shannon entropy).
 * **White-Box Sentence Inspection:** Every sentence flag is backed by inspectable metrics in the interactive UI, avoiding arbitrary single-number scores that reviewers cannot audit.
 * **Grounded Empirical Reporting:** The repository provides an automated test harness (`evaluate.py`) running on structured data (`data/dataset.json`), surfacing real misclassifications and ESL structural nuances directly in the codebase.
-  ---
 
 ### **Git Commands to Save and Push:**
 
@@ -162,3 +161,4 @@ python evaluate.py
 git add README.md
 git commit -m "docs: sync exact empirical metrics and execution setup"
 git push origin main
+---
