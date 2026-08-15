@@ -40,6 +40,7 @@ Machine-generated text differs measurably from human prose: it is smoother than 
 |  - Per-Sentence Expandable Evidence Drawers                     |
 |  - Heuristic ESL False-Positive Safeguard Warning               |
 +-----------------------------------------------------------------+ 
+ ```
 
 ### 1.1 Burstiness Variance (Coefficient of Variation)
 
