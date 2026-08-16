@@ -3,6 +3,7 @@ import numpy as np
 import re
 import math
 from collections import Counter
+from perplexity import sentence_perplexity
 
 # Set page configuration
 st.set_page_config(
@@ -84,7 +85,15 @@ def analyze_essay(text):
         # Feature 3: Lexical smoothness
         smoothness_signal = 0.25 if (entropy > 2.8 and ttr > 0.85 and w_count > 8) else 0.05
 
-        raw_prob = marker_signal + uniformity_signal + smoothness_signal
+        # Feature 4: GPT-2 perplexity — how "predictable" this sentence is
+        # to an actual language model. This is the token-probability signal;
+        # everything else above is surface stylometry.
+        ppl = sentence_perplexity(s) if w_count >= 4 else None
+        # Below ~40 perplexity a sentence reads as unusually predictable to
+        # GPT-2 (typical human sentences on this model tend to sit ~50-150+).
+        perplexity_signal = 0.3 if (ppl is not None and ppl < 40) else 0.0
+
+        raw_prob = marker_signal + uniformity_signal + smoothness_signal + perplexity_signal
         if w_count < 6:
             raw_prob *= 0.4
 
@@ -97,6 +106,8 @@ def analyze_essay(text):
             reasons.append("Syntactic uniformity matching synthetic pacing")
         if smoothness_signal > 0.2:
             reasons.append("Uncharacteristically high lexical smoothness")
+        if perplexity_signal > 0:
+            reasons.append(f"Low GPT-2 perplexity ({ppl:.1f}) — unusually predictable phrasing")
         if not reasons:
             reasons.append("Natural burstiness and organic phrasing")
 
@@ -121,6 +132,7 @@ def analyze_essay(text):
             "word_count": w_count,
             "entropy": entropy,
             "ttr": ttr,
+            "perplexity": round(ppl, 1) if ppl is not None else None,
             "ai_prob": int(ai_prob * 100),
             "verdict": verdict,
             "reasons": reasons,
@@ -209,10 +221,11 @@ if analyze_btn and sample_text:
     for s in report['sentences']:
         with st.expander(f"Sentence {s['index']}: {s['verdict']} ({s['ai_prob']}% AI Risk) — \"{s['text'][:60]}...\""):
             st.write(f"**Full Text:** {s['text']}")
-            c1, c2, c3 = st.columns(3)
+            c1, c2, c3, c4 = st.columns(4)
             c1.write(f"**Word Count:** {s['word_count']}")
             c2.write(f"**Entropy:** {s['entropy']}")
             c3.write(f"**Lexical Diversity (TTR):** {s['ttr']}")
+            c4.write(f"**GPT-2 Perplexity:** {s['perplexity'] if s['perplexity'] is not None else 'n/a (too short)'}")
             st.write("**Identified Drivers:**")
             for r in s['reasons']:
                 st.write(f"- {r}")
