@@ -5,6 +5,13 @@ Veritas is a white-box statistical and stylometric detection engine engineered s
 ---
 
 ## 1. Core Detection Architecture & Mathematical Signals
+# Veritas — Explainable AI Detector for College Admissions Essays
+
+Veritas is a white-box statistical and stylometric detection engine engineered specifically for evaluating college admissions personal statements. Rather than acting as a prompt wrapper over a commercial chat model, Veritas computes verifiable mathematical properties directly from raw text: sentence-level burstiness variance, Shannon entropy, type-token diversity, and formulaic AI transition marker density.
+
+---
+
+## 1. Core Detection Architecture & Mathematical Signals
 
 Machine-generated text differs measurably from human prose: it is smoother than it should be, its sentence rhythms are unnaturally uniform, and it clusters within a narrower set of structural transitions. Veritas measures these variations through four deterministic signals:
 
@@ -111,23 +118,23 @@ python evaluate.py
 
 ### 3.2 Failure Mode Analysis: 3 Confidently Incorrect Cases
 
-Statistical detectors have fundamental limits. The benchmark highlights three specific edge cases[cite: 1]:
+Statistical detectors have fundamental limits. The benchmark highlights three specific edge cases:
 
 #### Case 1: The Over-Edited Academic Essay (`human_academic_overedited_01`)
-* **Ground Truth:** Human-authored[cite: 1].
+* **Ground Truth:** Human-authored.
 * **Detector Classification:** Misclassified as Machine Generated (64% AI Risk).
 * **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.108$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
 
 #### Case 2: The Adversarially Prompted Conversational LLM (`machine_conversational_01`)
-* **Ground Truth:** Machine-generated[cite: 1].
+* **Ground Truth:** Machine-generated.
 * **Detector Classification:** Misclassified as Human Written (94% AI Risk).
 * **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated the Burstiness $CV$ to $0.11$, bypassing length-variance heuristics.
 
 #### Case 3: The Non-Native English (ESL) Applicant (`human_esl_01`)
-* **Ground Truth:** Human-authored (ESL)[cite: 1].
-* **Detector Classification:** Elevated AI Risk / False Positive (38% AI Risk)[cite: 1].
-* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.35$) and Shannon entropy ($5.508$), mimicking synthetic smoothing[cite: 1].
-* **Documented Review Guidance:** Because statistical stylometry cannot inherently distinguish non-native structural simplicity from machine-generated uniformity, admissions reviewers must cross-examine applicant language backgrounds before accepting statistical flags on ESL prose[cite: 1].
+* **Ground Truth:** Human-authored (ESL).
+* **Detector Classification:** Elevated AI Risk / False Positive (38% AI Risk).
+* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.35$) and Shannon entropy ($5.508$), mimicking synthetic smoothing.
+* **Documented Review Guidance:** Because statistical stylometry cannot inherently distinguish non-native structural simplicity from machine-generated uniformity, admissions reviewers must cross-examine applicant language backgrounds before accepting statistical flags on ESL prose.
 
 ---
 
@@ -154,12 +161,5 @@ python evaluate.py
 * **Deterministic Signal Synthesis:** Instead of passing text to an external black-box LLM API and relaying a prompt verdict, the system computes closed-form statistical properties (length variance, token frequencies, Shannon entropy).
 * **White-Box Sentence Inspection:** Every sentence flag is backed by inspectable metrics in the interactive UI, avoiding arbitrary single-number scores that reviewers cannot audit.
 * **Grounded Empirical Reporting:** The repository provides an automated test harness (`evaluate.py`) running on structured data (`data/dataset.json`), surfacing real misclassifications and ESL structural nuances directly in the codebase.
-
-### **Git Commands to Save and Push:**
-
-```bash
-git add README.md
-git commit -m "docs: sync exact empirical metrics and execution setup"
-git push origin main
-```
+* **Token-Probability Signal:** In addition to the stylometric features above, `perplexity.py` scores each sentence against GPT-2 to measure how statistically predictable it is to a real language model — the model produces only a number per sentence; Veritas makes the classification decision itself.
 ---
