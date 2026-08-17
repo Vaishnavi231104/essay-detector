@@ -1,5 +1,4 @@
 
-## 1. Core Detection Architecture & Mathematical Signals
 # Veritas — Explainable AI Detector for College Admissions Essays
 
 Veritas is a white-box statistical and stylometric detection engine engineered specifically for evaluating college admissions personal statements. Rather than acting as a prompt wrapper over a commercial chat model, Veritas computes verifiable mathematical properties directly from raw text: sentence-level burstiness variance, Shannon entropy, type-token diversity, and formulaic AI transition marker density.
