@@ -122,7 +122,7 @@ Statistical detectors have fundamental limits. The benchmark highlights three sp
 
 #### Case 1: The Over-Edited Academic Essay (`human_academic_overedited_01`)
 * **Ground Truth:** Human-authored.
-* **Detector Classification:** Misclassified as Machine Generated (64% AI Risk).
+* **Detector Classification:** Misclassified as Machine Generated (88% AI Risk).
 * **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.108$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
 
 #### Case 2: The Adversarially Prompted Conversational LLM (`machine_conversational_01`)
