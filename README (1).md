@@ -1,13 +1,13 @@
 
 # Veritas — Explainable AI Detector for College Admissions Essays
 
-Veritas is a white-box statistical and stylometric detection engine engineered specifically for evaluating college admissions personal statements. Rather than acting as a prompt wrapper over a commercial chat model, Veritas computes verifiable mathematical properties directly from raw text: sentence-level burstiness variance, Shannon entropy, type-token diversity, and formulaic AI transition marker density.
+Veritas is a white-box statistical and stylometric detection engine engineered specifically for evaluating college admissions personal statements. Rather than acting as a prompt wrapper over a commercial chat model, Veritas computes verifiable mathematical properties directly from raw text: sentence-level burstiness variance, Shannon entropy, type-token diversity, formulaic AI transition marker density, and GPT-2 token-probability (perplexity).
 
 ---
 
 ## 1. Core Detection Architecture & Mathematical Signals
 
-Machine-generated text differs measurably from human prose: it is smoother than it should be, its sentence rhythms are unnaturally uniform, and it clusters within a narrower set of structural transitions. Veritas measures these variations through four deterministic signals:
+Machine-generated text differs measurably from human prose: it is smoother than it should be, its sentence rhythms are unnaturally uniform, and it clusters within a narrower set of structural transitions. Veritas measures these variations through five deterministic signals:
 
 ```text
 +-----------------------------------------------------------------+
@@ -29,6 +29,8 @@ Machine-generated text differs measurably from human prose: it is smoother than 
 |     TTR = Unique Words / Total Words                            |
 |                                                                 |
 |  4. Formulaic LLM Transition & Cliché Density                   |
+|                                                                 |
+|  5. GPT-2 Token Probability (Perplexity)                        |
 +--------------------------------+--------------------------------+
                                  |
                                  | Weighted Scoring & Heuristics
@@ -51,8 +53,8 @@ Veritas computes the Coefficient of Variation ($CV$):
 
 $$CV = \frac{\sigma}{\mu} = \frac{\text{Standard Deviation of Sentence Lengths}}{\text{Mean Sentence Length}}$$
 
-* **Human Baseline:** High burstiness ($CV > 0.40$).
-* **Synthetic Baseline:** Low burstiness ($CV < 0.25$).
+* **Human Baseline:** High burstiness ($CV > 0.50$).
+* **Synthetic Baseline:** Low burstiness ($CV < 0.28$).
 
 ---
 
@@ -76,7 +78,13 @@ $$\text{TTR} = \frac{\text{Count of Unique Words}}{\text{Total Word Count}}$$
 
 ### 1.4 Formulaic LLM Marker Frequency
 
-Scans for characteristic transitions and cliché adjectives over-indexed by LLMs in personal narrative prompts (*delve*, *testament*, *tapestry*, *pivotal*, *catalyst*, *crucible*, *unwavering*, *intertwined*, *beacon*).
+Scans for characteristic transitions and cliché adjectives over-indexed by LLMs in personal narrative prompts (*delve*, *testament*, *tapestry*, *pivotal*, *catalyst*, *crucible*, *unwavering*, *intertwined*, *beacon*, and 19 further terms — see `AI_MARKERS` in `app.py` for the full list).
+
+---
+
+### 1.5 GPT-2 Token Probability (Perplexity)
+
+The only signal derived from an actual language model rather than surface statistics. `perplexity.py` runs each sentence through GPT-2 and computes how "surprised" the model is by it (cross-entropy loss, converted to perplexity). Lower perplexity means the sentence was more predictable to the model — a hallmark of machine-generated text. The model outputs only a number per sentence; Veritas' own scoring logic makes the classification, never GPT-2 itself.
 
 ---
 
@@ -116,19 +124,19 @@ Statistical detectors have fundamental limits. The benchmark highlights three sp
 
 #### Case 1: The Over-Edited Academic Essay (`human_academic_overedited_01`)
 * **Ground Truth:** Human-authored.
-* **Detector Classification:** Misclassified as Machine Generated (88% AI Risk).
-* **Underlying Mechanism:** Intensive editorial review forced uniform 13–15 word sentences ($CV = 0.108$) alongside formal transition connectors (*furthermore*, *moreover*, *pivotal*), creating statistical markers identical to machine generation.
+* **Detector Classification:** Misclassified as Machine Generated (94% AI Risk).
+* **Underlying Mechanism:** Intensive editorial review forced uniform sentence lengths ($CV = 0.111$) alongside 3 formal transition connectors (*furthermore*, *moreover*, *pivotal*) and lower-than-average GPT-2 perplexity, creating statistical and probabilistic markers identical to machine generation.
 
 #### Case 2: The Adversarially Prompted Conversational LLM (`machine_conversational_01`)
 * **Ground Truth:** Machine-generated.
-* **Detector Classification:** Misclassified as Human Written (94% AI Risk).
-* **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated the Burstiness $CV$ to $0.11$, bypassing length-variance heuristics.
+* **Detector Classification:** Misclassified as Mixed/Human-leaning (38% AI Risk).
+* **Underlying Mechanism:** Instructing the model to use intentional sentence fragments and informal tone elevated Burstiness to $CV = 0.347$ and avoided all formulaic markers (0 detected), bypassing the length-variance and vocabulary heuristics despite being fully machine-generated.
 
 #### Case 3: The Non-Native English (ESL) Applicant (`human_esl_01`)
 * **Ground Truth:** Human-authored (ESL).
-* **Detector Classification:** Elevated AI Risk / False Positive (38% AI Risk).
-* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.35$) and Shannon entropy ($5.508$), mimicking synthetic smoothing.
-* **Documented Review Guidance:** Because statistical stylometry cannot inherently distinguish non-native structural simplicity from machine-generated uniformity, admissions reviewers must cross-examine applicant language backgrounds before accepting statistical flags on ESL prose.
+* **Detector Classification:** Elevated AI Risk / False Positive (88% AI Risk).
+* **Underlying Mechanism:** Non-native English writers often rely on simple, repetitive syntactic structures (Subject-Verb-Object) and a limited active vocabulary pool, depressing sentence variance ($CV = 0.108$) and Shannon entropy ($5.245$). These same simple, predictable sentence patterns also register as low GPT-2 perplexity, compounding the false-positive risk once the token-probability signal was added.
+* **Documented Review Guidance:** Because both stylometry and model-based perplexity struggle to distinguish non-native structural simplicity from machine-generated uniformity, admissions reviewers must cross-examine applicant language backgrounds before accepting statistical flags on ESL prose. This case worsened after adding the perplexity signal, underscoring that a stronger detector isn't automatically a fairer one.
 
 ---
 
@@ -139,7 +147,7 @@ Statistical detectors have fundamental limits. The benchmark highlights three sp
 
 ```bash
 # 1. Install required packages
-pip install streamlit numpy scipy
+pip install streamlit numpy scipy torch transformers
 
 # 2. Run the interactive web detector
 streamlit run app.py
